@@ -1,0 +1,32 @@
+#!/bin/bash
+
+if [ $1 = "MSG" ]; then
+  case "$2" in
+      IN)
+         message="$(cat $4)"
+         chiffre=$(echo $3 | sed 's/[^[:digit:]]//g')
+         id_pseudo=$(grep $chiffre ~/.mcabber/contact)
+         pseudo=$(echo $id_pseudo | cut -d":" -f2);
+         
+         notify-send -t 5000 --category=im --icon="/home/kaldoran/.mcabber/photo/$chiffre.gif" "Mcabber - $pseudo" "$message"
+         rm $4
+      ;;
+      MUC)
+         message="$(cat $4)"
+         chiffre=$(echo $3 | sed 's/[^[:digit:]]//g')
+         id_pseudo=$(grep $chiffre ~/.mcabber/contact)
+         pseudo=$(echo $id_pseudo | cut -d":" -f2);
+         notify-send -t 5000 --category=im --icon="/home/kaldoran/.mcabber/photo/$chiffre.gif" "Mcabber - $pseudo" "$message"
+        rm $4
+      ;;
+      OUT)
+        echo > /dev/null
+      ;;
+  esac
+elif [ $1 = "UNREAD" ]; then
+   val=${2:0:2}
+   if (( $val != "0 " )); then
+      notify-send -t 5000 --category=im --icon=notification-message-im "Mcabber" "$val message(s) non lus"
+      espeak "New facebook message"
+  fi
+fi
